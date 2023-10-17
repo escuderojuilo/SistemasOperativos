@@ -90,15 +90,22 @@ public class Lista {
 
     
 //Merge Sort Para tiempo Llegada
-    public Lista merge_sort(){
+    public Lista merge_sort() {
+    // Crear una copia de la lista actual para mantenerla sin cambios
+         Lista listaCopia = new Lista();
+         Nodo cursorCopia = this.primero;
 
-        this.cursor = this.primero;
+    while (cursorCopia != null) {
+        listaCopia.insertar(cursorCopia.getProceso());
+        cursorCopia = cursorCopia.getSiguiente();
+    }
 
-        if ( this.length <= 1 )    
-            return this;
+    if (listaCopia.getLength() <= 1) {
+        return listaCopia;
+    }
 
-        Lista izq = new Lista();
-        Lista der = new Lista();
+    Lista izq = new Lista();
+    Lista der = new Lista();
 
         for ( int i = 0; i < this.length; i++ ) {
             
