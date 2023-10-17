@@ -1,10 +1,10 @@
 package com.mycompany.so.proyecto_sjf;
 
 public class Lista {
-    private Nodo primero;   
-    private Nodo ultimo;    
-    private Nodo cursor;    
-    private int length;     
+    private Nodo primero;
+    private Nodo ultimo;
+    private Nodo cursor;
+    private int length;
 
     public Lista() {
         this.primero = null;
@@ -12,20 +12,18 @@ public class Lista {
         this.length = 0;
     }
 
-    public void insertar( Proceso proceso ) {
-        Nodo nuevoProceso = new Nodo( proceso );
-        
-        if ( this.primero == null ) {
-            
+    public void insertar(Proceso proceso) {
+        Nodo nuevoProceso = new Nodo(proceso);
+
+        if (this.primero == null) {
             nuevoProceso.setIndex(0);
             this.primero = nuevoProceso;
             this.ultimo = nuevoProceso;
             this.length++;
             return;
-        } 
-        
-        if ( this.primero.equals(this.ultimo) ) {
-            
+        }
+
+        if (this.primero.equals(this.ultimo)) {
             this.primero.setSiguiente(nuevoProceso);
             nuevoProceso.setAnterior(this.primero);
             nuevoProceso.setIndex(1);
@@ -33,7 +31,7 @@ public class Lista {
             this.length++;
             return;
         }
-        
+
         this.ultimo.setSiguiente(nuevoProceso);
         nuevoProceso.setAnterior(this.ultimo);
         nuevoProceso.setIndex(this.ultimo.getIndex() + 1);
@@ -41,28 +39,45 @@ public class Lista {
         this.length++;
     }
 
+    public boolean isEmpty() {
+        return length == 0;
+    }
+
+    public void pop() {
+        if (!isEmpty()) {
+            if (this.primero.equals(this.ultimo)) {
+                this.primero = null;
+                this.ultimo = null;
+                this.length = 0;
+                return;
+            }
+
+            this.primero = this.primero.getSiguiente();
+            this.primero.setAnterior(null);
+            this.length--;
+        }
+    }
+
     public Proceso sacar() {
-        
-        if ( this.primero != null ) {
+        if (this.primero != null) {
             Nodo temp = this.primero;
-            
-            if ( this.primero.getSiguiente() == null ) {
-    
+
+            if (this.primero.getSiguiente() == null) {
                 this.primero = null;
                 this.ultimo = null;
                 this.length--;
-    
+
                 return temp.getProceso();
             }
 
             this.cursor = this.primero;
-            for ( int i = 0; i < this.length-1; i++ ) {
-                this.cursor.getSiguiente().setIndex(this.cursor.getIndex());;
+            for (int i = 0; i < this.length - 1; i++) {
+                this.cursor.getSiguiente().setIndex(this.cursor.getIndex());
                 this.cursor = this.cursor.getSiguiente();
             }
 
             this.primero = this.primero.getSiguiente();
-            this.primero.setAnterior( null );
+            this.primero.setAnterior(null);
             this.length--;
 
             return temp.getProceso();
@@ -76,33 +91,29 @@ public class Lista {
     }
 
     public String listar() {
-
         this.cursor = this.primero;
-        String cadena = "";
+        StringBuilder cadena = new StringBuilder();
 
-        for ( int i = 0; i < this.length; i++ ) {
-            cadena += this.cursor.getProceso().getNombre() + ", ";
+        for (int i = 0; i < this.length; i++) {
+            cadena.append(this.cursor.getProceso().getNombre()).append(", ");
             this.cursor = this.cursor.getSiguiente();
         }
 
-        return cadena;
+        return cadena.toString();
     }
 
-    public Lista merge_sort(){
-
+    public Lista merge_sort() {
         this.cursor = this.primero;
 
-        if ( this.length <= 1 )    
+        if (this.length <= 1)
             return this;
 
         Lista izq = new Lista();
         Lista der = new Lista();
 
-        for ( int i = 0; i < this.length; i++ ) {
-            
-            if ( i < (this.length)/2 )
+        for (int i = 0; i < this.length; i++) {
+            if (i < (this.length) / 2)
                 izq.insertar(this.cursor.getProceso());
-            
             else
                 der.insertar(this.cursor.getProceso());
 
@@ -112,30 +123,29 @@ public class Lista {
         izq = izq.merge_sort();
         der = der.merge_sort();
 
-        return merge( izq, der );
+        return merge(izq, der);
     }
 
-    private Lista merge( Lista izq, Lista der ) {
+    private Lista merge(Lista izq, Lista der) {
         Lista resultado = new Lista();
 
-        while ( izq.getLength() > 0 && der.getLength() > 0 ) {
-            if ( izq.getPrimero().getProceso().getTiempoLlegada() <= der.getPrimero().getProceso().getTiempoLlegada() )
-                resultado.insertar( izq.sacar() );
+        while (izq.getLength() > 0 && der.getLength() > 0) {
+            if (izq.getPrimero().getProceso().getTiempoLlegada() <= der.getPrimero().getProceso().getTiempoLlegada())
+                resultado.insertar(izq.sacar());
             else
-                resultado.insertar( der.sacar() );
+                resultado.insertar(der.sacar());
         }
 
-        while ( izq.getLength() > 0 ) {
-            resultado.insertar( izq.sacar() );
+        while (izq.getLength() > 0) {
+            resultado.insertar(izq.sacar());
         }
 
-        while ( der.getLength() > 0 ) {
-            resultado.insertar( der.sacar() );
+        while (der.getLength() > 0) {
+            resultado.insertar(der.sacar());
         }
 
         return resultado;
     }
-
 
     public int getLength() {
         return length;
@@ -144,11 +154,10 @@ public class Lista {
     public Nodo getPrimero() {
         return primero;
     }
-    
-    public Nodo getUltimo(){
+
+    public Nodo getUltimo() {
         return ultimo;
     }
-
 
     public Nodo getCursor() {
         return cursor;
